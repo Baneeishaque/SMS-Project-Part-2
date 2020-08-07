@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
             getPermissionToReadSMS();
         } else {
-            smsManager.sendTextMessage("YOUR NUMBER HERE", null, input.getText().toString(), null, null);
+            smsManager.sendTextMessage("+919656405196", null, input.getText().toString(), null, null);
             Toast.makeText(this, "Message sent!", Toast.LENGTH_SHORT).show();
         }
     }
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void refreshSmsInbox() {
         ContentResolver contentResolver = getContentResolver();
-        Cursor smsInboxCursor = contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null);
+        Cursor smsInboxCursor = contentResolver.query(Uri.parse("content://sms/inbox"), new String[]{"date", "address", "body"}, null, null, "date DESC LIMIT 5");
 
 
         int indexBody = smsInboxCursor.getColumnIndex("body");
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         if (indexBody < 0 || !smsInboxCursor.moveToFirst()) return;
         arrayAdapter.clear();
         do {
-            String str = "SMS From: " + getContactName(this, smsInboxCursor.getString(indexAddress)) +
+            String str = "SMS From: " + smsInboxCursor.getString(indexAddress) +
                     "\n" + smsInboxCursor.getString(indexBody) + "\n";
             // if (smsInboxCursor.getString(indexAddress).equals("PHONE NUMBER HERE")) {
             arrayAdapter.add(str);
